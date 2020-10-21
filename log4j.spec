@@ -1,6 +1,6 @@
 Name:                log4j
 Version:             2.13.2
-Release:             1
+Release:             2
 Summary:             Java logging package
 License:             Apache-2.0
 URL:                 http://logging.apache.org/%{name}
@@ -123,6 +123,7 @@ rm -r log4j-core/src/main/java/org/apache/logging/log4j/core/appender/mom/kafka
 %pom_disable_module %{name}-spring-cloud-config
 %pom_disable_module %{name}-kubernetes
 %pom_disable_module %{name}-jpl
+%{mvn_alias} :%{name}-1.2-api %{name}:%{name}
 %{mvn_file} ':{%{name}-1.2-api}' %{name}/@1 %{name}
 %{mvn_package} ':%{name}-slf4j-impl' slf4j
 %{mvn_package} ':%{name}-to-slf4j' slf4j
@@ -167,6 +168,9 @@ rm -r log4j-core/src/main/java/org/apache/logging/log4j/core/appender/mom/kafka
 %doc NOTICE.txt
 
 %changelog
+* Wed Oct 21 2020 wangyue <wanyue92@huawei.com> - 2.13.2-2
+- Fix spec error
+
 * Wed Oct 21 2020 wangyue <wanyue92@huawei.com> - 2.13.2-1
 - Upgrade to 2.13.2 to fix CVE-2020-9488
 
