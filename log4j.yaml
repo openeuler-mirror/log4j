@@ -1,0 +1,5 @@
+git_url: https://github.com/apache/logging-log4j2
+version_control: github
+src_repo: apache/logging-log4j2
+tag_prefix: "^rel/"
+seperator: "."
