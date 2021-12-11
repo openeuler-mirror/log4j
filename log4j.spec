@@ -1,11 +1,15 @@
 Name:                log4j
 Version:             2.13.2
-Release:             1
+Release:             2
 Summary:             Java logging package
 License:             Apache-2.0
 URL:                 http://logging.apache.org/%{name}
 Source0:             http://archive.apache.org/dist/logging/%{name}/%{version}/apache-%{name}-%{version}-src.tar.gz
 Patch1:              logging-log4j-Remove-unsupported-EventDataConverter.patch
+Patch2:              CVE-2021-44228-1.patch
+Patch3:              CVE-2021-44228-2.patch
+Patch4:              CVE-2021-44228-3.patch
+Patch5:              CVE-2021-44228-4.patch
 BuildRequires:       fdupes maven-local mvn(com.fasterxml.jackson.core:jackson-core)
 BuildRequires:       mvn(com.fasterxml.jackson.core:jackson-databind) mvn(com.lmax:disruptor)
 BuildRequires:       mvn(com.sun.mail:javax.mail) mvn(org.apache.commons:commons-compress)
@@ -168,6 +172,9 @@ rm -r log4j-core/src/main/java/org/apache/logging/log4j/core/appender/mom/kafka
 %doc NOTICE.txt
 
 %changelog
+* Sat Dec 11 2021 yaoxin <yaoxin30@huawei.com> - 2.13.2-2
+- Fix CVE-2021-44228
+
 * Wed Oct 21 2020 wangyue <wanyue92@huawei.com> - 2.13.2-1
 - Upgrade to 2.13.2 to fix CVE-2020-9488
 
