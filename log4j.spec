@@ -1,6 +1,6 @@
 Name:                log4j
 Version:             2.13.2
-Release:             3
+Release:             4
 Summary:             Java logging package
 License:             Apache-2.0
 URL:                 http://logging.apache.org/%{name}
@@ -147,7 +147,7 @@ rm -r log4j-core/src/main/java/org/apache/logging/log4j/core/appender/mom/kafka
 %install
 %mvn_install
 %fdupes -s %{buildroot}%{_javadocdir}
-%jpackage_script org.apache.logging.log4j.jmx.gui.ClientGUI '' '' %{name}/%{name}-jmx-gui:%{name}/%{name}-core %{name}-jmx false
+%jpackage_script org.apache.logging.log4j.jmx.gui.ClientGui '' '' %{name}/%{name}-jmx-gui:%{name}/%{name}-core %{name}-jmx false
 
 %files -f .mfiles
 %doc LICENSE.txt NOTICE.txt
@@ -173,6 +173,9 @@ rm -r log4j-core/src/main/java/org/apache/logging/log4j/core/appender/mom/kafka
 %doc NOTICE.txt
 
 %changelog
+* Fri Dec 17 2021 caodongxia <caodongxia@huawei.com> - 2.13.2-4
+- Rename from ClientGUI to ClientGui
+
 * Thu Dec 16 2021 yaoxin <yaoxin30@huawei.com> - 2.13.2-3
 - Fix CVE-2021-45046
 
