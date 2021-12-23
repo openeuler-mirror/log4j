@@ -1,17 +1,14 @@
 Name:                log4j
-Version:             2.13.2
-Release:             4
+Version:             2.17.0
+Release:             1
 Summary:             Java logging package
 License:             Apache-2.0
 URL:                 http://logging.apache.org/%{name}
 Source0:             http://archive.apache.org/dist/logging/%{name}/%{version}/apache-%{name}-%{version}-src.tar.gz
 Patch1:              logging-log4j-Remove-unsupported-EventDataConverter.patch
-Patch2:              CVE-2021-44228-1.patch
-Patch3:              CVE-2021-44228-2.patch
-Patch4:              CVE-2021-44228-3.patch
-Patch5:              CVE-2021-44228-4.patch
-Patch6:              CVE-2021-45046.patch
 BuildRequires:       fdupes maven-local mvn(com.fasterxml.jackson.core:jackson-core)
+BuildRequires:       mvn(com.fasterxml.jackson.core:jackson-annotations)
+BuildRequires:       mvn(jakarta.servlet:jakarta.servlet-api)
 BuildRequires:       mvn(com.fasterxml.jackson.core:jackson-databind) mvn(com.lmax:disruptor)
 BuildRequires:       mvn(com.sun.mail:javax.mail) mvn(org.apache.commons:commons-compress)
 BuildRequires:       mvn(org.apache.felix:maven-bundle-plugin)
@@ -25,7 +22,7 @@ BuildRequires:       mvn(com.datastax.cassandra:cassandra-driver-core)
 BuildRequires:       mvn(com.fasterxml.jackson.dataformat:jackson-dataformat-xml)
 BuildRequires:       mvn(com.fasterxml.jackson.dataformat:jackson-dataformat-yaml)
 BuildRequires:       mvn(com.fasterxml.woodstox:woodstox-core) mvn(commons-logging:commons-logging)
-BuildRequires:       mvn(javax.servlet.jsp:jsp-api) mvn(javax.servlet:javax.servlet-api)
+BuildRequires:       mvn(javax.servlet.jsp:jsp-api)
 BuildRequires:       mvn(org.apache.commons:commons-csv) mvn(org.apache.tomcat:tomcat-catalina)
 BuildRequires:       mvn(org.eclipse.jetty:jetty-util)
 BuildRequires:       mvn(org.eclipse.persistence:javax.persistence)
@@ -73,11 +70,6 @@ Summary:             Apache Log4j BOM
 %description bom
 Apache Log4j 2 Bill of Material
 
-%package nosql
-Summary:             Apache Log4j NoSql
-%description nosql
-Use NoSQL databases such as MongoDB and CouchDB to append log messages.
-
 %package        help
 Summary:             API documentation for %{name}
 Obsoletes:           %{name}-manual < %{version}
@@ -113,21 +105,40 @@ rm -r log4j-core/src/main/java/org/apache/logging/log4j/core/appender/mom/kafka
 %pom_disable_module %{name}-liquibase
 %pom_disable_module %{name}-slf4j18-impl
 %pom_disable_module %{name}-jdbc-dbcp2
-%pom_disable_module %{name}-mongodb2
 %pom_disable_module %{name}-mongodb3
+%pom_disable_module %{name}-mongodb4
 %pom_remove_dep :jconsole %{name}-jmx-gui
 %pom_add_dep sun.jdk:jconsole %{name}-jmx-gui
 %pom_change_dep -r org.osgi:org.osgi.core org.osgi:osgi.core
 %pom_remove_plugin :apache-rat-plugin %{name}-bom
-%pom_remove_plugin :maven-failsafe-plugin
+%pom_remove_plugin -r :maven-failsafe-plugin
 %pom_disable_module %{name}-iostreams
 %pom_disable_module %{name}-jul
 %pom_disable_module %{name}-core-its
 %pom_disable_module %{name}-jpa
+%pom_disable_module %{name}-couchdb
+%pom_disable_module %{name}-cassandra
 %pom_disable_module %{name}-appserver
+%pom_disable_module %{name}-spring-boot
 %pom_disable_module %{name}-spring-cloud-config
 %pom_disable_module %{name}-kubernetes
 %pom_disable_module %{name}-jpl
+
+%pom_remove_dep -r :jackson-dataformat-yaml
+%pom_remove_dep -r :jackson-dataformat-xml
+%pom_remove_dep -r :woodstox-core
+%pom_remove_dep -r :javax.persistence
+%pom_remove_dep -r :jboss-jms-api_1.1_spec
+%pom_remove_dep -r :jeromq
+%pom_remove_dep -r :commons-csv
+
+rm -r log4j-core/src/main/java/org/apache/logging/log4j/core/{jackson,config/yaml,parser}
+rm -r log4j-core/src/main/java/org/apache/logging/log4j/core/appender/{db,mom,nosql}
+rm log4j-core/src/main/java/org/apache/logging/log4j/core/layout/*{Csv,Jackson,Xml,Yaml,Json,Gelf}*.java
+rm log4j-1.2-api/src/main/java/org/apache/log4j/builders/layout/*Xml*.java
+rm log4j-api/src/main/java/org/apache/logging/log4j/util/Activator.java
+rm -r log4j-1.2-api/src/main/java/org/apache/log4j/or/jms
+
 %{mvn_alias} :%{name}-1.2-api %{name}:%{name}
 %{mvn_file} ':{%{name}-1.2-api}' %{name}/@1 %{name}
 %{mvn_package} ':%{name}-slf4j-impl' slf4j
@@ -163,8 +174,6 @@ rm -r log4j-core/src/main/java/org/apache/logging/log4j/core/appender/mom/kafka
 
 %files bom -f .mfiles-bom
 
-%files nosql -f .mfiles-nosql
-
 %files jmx-gui -f .mfiles-jmx-gui
 %{_bindir}/%{name}-jmx
 
@@ -173,6 +182,9 @@ rm -r log4j-core/src/main/java/org/apache/logging/log4j/core/appender/mom/kafka
 %doc NOTICE.txt
 
 %changelog
+* Fri Dec 24 2021 wangkai <wangkai385@huawei.com> - 2.17.0-1
+- Upgrade to 2.17.0 for fix CVE-2021-45105
+
 * Fri Dec 17 2021 caodongxia <caodongxia@huawei.com> - 2.13.2-4
 - Rename from ClientGUI to ClientGui
 
