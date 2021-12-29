@@ -1,11 +1,13 @@
 Name:                log4j
 Version:             2.17.0
-Release:             2
+Release:             3
 Summary:             Java logging package
 License:             Apache-2.0
 URL:                 http://logging.apache.org/%{name}
 Source0:             http://archive.apache.org/dist/logging/%{name}/%{version}/apache-%{name}-%{version}-src.tar.gz
 Patch1:              logging-log4j-Remove-unsupported-EventDataConverter.patch
+Patch2:              CVE-2021-44832-pre.patch
+Patch3:              CVE-2021-44832.patch
 BuildRequires:       fdupes maven-local mvn(com.fasterxml.jackson.core:jackson-core)
 BuildRequires:       mvn(com.fasterxml.jackson.core:jackson-annotations)
 BuildRequires:       mvn(jakarta.servlet:jakarta.servlet-api)
@@ -182,6 +184,9 @@ rm -r log4j-1.2-api/src/main/java/org/apache/log4j/or/jms
 %doc NOTICE.txt
 
 %changelog
+* Wed Dec 29 2021 wangkai <wangkai385@huawei.com> - 2.17.0-3
+- Fix CVE-2021-44832
+
 * Mon Dec 27 2021 wulei <wulei80@huawei.com> - 2.17.0-2
 - Add disruptor version limit for disruptor
 
